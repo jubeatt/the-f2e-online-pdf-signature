@@ -1,10 +1,24 @@
-import banner from '@/assets/images/banner.png'
 import diamond1 from '@/assets/images/diamond-1.png'
 import diamond2 from '@/assets/images/diamond-2.png'
 import { Logo } from '@/svgs'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 export default function Home() {
+  useEffect(() => {
+    convertStyle()
+    window.addEventListener('resize', convertStyle)
+    return () => {
+      window.removeEventListener('resize', convertStyle)
+    }
+  }, [])
+
+  function convertStyle() {
+    const target = document.querySelector('.f2e-layout-home-container') as HTMLElement
+    const height = window.innerWidth <= 992 ? window.innerHeight - 85 : window.innerHeight - 65
+    target.style.setProperty('height', `${height}px`)
+  }
+
   return (
     <div className='f2e-layout-home'>
       <div className='f2e-layout-home-container'>

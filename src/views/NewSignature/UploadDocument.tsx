@@ -2,7 +2,7 @@ import { ActionTypes } from '@/context/AppContext'
 import { Pdf } from '@/svgs'
 import { useAppContext } from '@/utils/useAppContext'
 import { Upload, Modal, notification } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const maxSize = 10 * 1024 * 1024
@@ -12,6 +12,20 @@ export default function UploadDocument() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const navigate = useNavigate()
   const { dispatch } = useAppContext()
+
+  useEffect(() => {
+    convertStyle()
+    window.addEventListener('resize', convertStyle)
+    return () => {
+      window.removeEventListener('resize', convertStyle)
+    }
+  }, [])
+
+  function convertStyle() {
+    const target = document.querySelector('.f2e-layout-new-signature-tab-content') as HTMLElement
+    const height = window.innerWidth <= 768 ? window.innerHeight - 330 : window.innerHeight - 285
+    target.style.setProperty('height', `${height}px`)
+  }
 
   function onFileSelect(file: File) {
     if (file.size > maxSize) {

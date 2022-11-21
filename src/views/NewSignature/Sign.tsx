@@ -109,6 +109,20 @@ export default function Sign() {
     }
   }, [isFinalPage])
 
+  useEffect(() => {
+    convertStyle()
+    window.addEventListener('resize', convertStyle)
+    return () => {
+      window.removeEventListener('resize', convertStyle)
+    }
+  }, [])
+
+  function convertStyle() {
+    const target = document.querySelector('.f2e-layout-sign-canvas') as HTMLElement
+    const height = window.innerWidth <= 768 ? window.innerHeight - 331 : window.innerHeight - 223
+    target.style.setProperty('height', `${height}px`)
+  }
+
   function resizeCanvas1() {
     const outerCanvasContainer = document.querySelector('.f2e-layout-sign-canvas-container')!
     const ratio = canvasPdf.current.getWidth() / canvasPdf.current.getHeight()
