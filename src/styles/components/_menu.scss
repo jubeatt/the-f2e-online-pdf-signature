@@ -1,0 +1,64 @@
+.ant-menu-horizontal {
+  background-color: transparent;
+  border-bottom: unset;
+  min-width: 0px;
+  flex: 1;
+  justify-content: flex-end;
+  .ant-menu-item {
+    font-size: 1rem;
+    a {
+      color: var(--secondary);
+      &:hover {
+        color: var(--primary);
+      }
+      &.active {
+        color: var(--primary);
+      }
+    }
+    &::after {
+      display: none;
+    }
+    &:hover {
+      &::after {
+        display: none;
+      }
+    }
+    &.ant-menu-item-selected {
+      color: unset;
+      a.active {
+        color: var(--primary);
+      }
+      &::after {
+        display: none;
+      }
+    }
+    &.ant-menu-item-disabled {
+      a {
+        cursor: not-allowed;
+      }
+    }
+  }
+  .ant-menu-submenu-horizontal {
+    display: flex;
+    align-items: center;
+  }
+}
+
+// submenu
+.ant-menu-submenu {
+  .ant-menu-item {
+    a {
+      display: block;
+    }
+  }
+}
+
+// .ant-menu-submenu-active {
+//   .ant-menu-submenu-title {
+//     svg {
+//       path {
+//         fill: red;
+//       }
+//     }
+//   }
+// }

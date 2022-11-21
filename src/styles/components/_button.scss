@@ -1,0 +1,47 @@
+.ant-btn {
+  box-shadow: 0px 4px 4px #eeede8;
+  padding: 15px 40px;
+  border-radius: 35px;
+  height: auto;
+  letter-spacing: 0.2em;
+  font-size: 1rem;
+  @include lg {
+    padding: 10px 35px;
+  }
+  @include sm {
+    padding: 10px 15px;
+  }
+  &.ant-btn-primary {
+    // background-color: var(--secondary);
+    &:not([disabled]) {
+      border: none;
+      background-color: transparent;
+      background-image: linear-gradient(to bottom, #51a8bc 50%, #f9b471 50%);
+      background-size: 100% 200%;
+      background-position: left top;
+      transition: 0.3s linear;
+    }
+    &:not([disabled]):hover {
+      // background-color: var(--primary);
+      background-position: left bottom;
+    }
+  }
+  &.ant-btn-default {
+    border: unset;
+    color: var(--secondary);
+    &:not([disabled]):hover {
+      color: var(--primary);
+    }
+  }
+  &[disabled] {
+    background-color: var(--mid-gray);
+    border-color: transparent;
+    color: var(--white);
+  }
+  &.tertiary {
+    background-color: var(--light-main);
+    &:not([disabled]):hover {
+      color: var(--primary);
+    }
+  }
+}

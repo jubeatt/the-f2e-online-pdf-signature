@@ -1,0 +1,56 @@
+.ant-tabs {
+  .ant-tabs-nav {
+    background-color: var(--light-main);
+    border-top-left-radius: 35px;
+    border-top-right-radius: 35px;
+    margin-bottom: 0;
+    &::before {
+      border-bottom: unset;
+    }
+    .ant-tabs-nav-wrap {
+      .ant-tabs-nav-list {
+        width: 100%;
+        .ant-tabs-tab {
+          flex: 1;
+          justify-content: center;
+          padding: 15px 0;
+          border-top-left-radius: 35px;
+          border-top-right-radius: 35px;
+          font-size: 1.25rem;
+          @include md {
+            font-size: 1rem;
+          }
+          .ant-tabs-tab-btn {
+            color: var(--secondary);
+          }
+          &.ant-tabs-tab-active {
+            background-color: var(--white);
+            .ant-tabs-tab-btn {
+              color: var(--primary);
+            }
+          }
+          &:first-child {
+            &.ant-tabs-tab-active {
+              box-shadow: 8px 4px 4px rgba(238, 237, 232, 0.5);
+            }
+          }
+          &:not(:first-child) {
+            &.ant-tabs-tab-active {
+              box-shadow: -8px 4px 4px rgba(238, 237, 232, 0.5);
+            }
+          }
+        }
+        .ant-tabs-tab + .ant-tabs-tab {
+          margin: 0;
+        }
+        .ant-tabs-ink-bar {
+          display: none;
+        }
+      }
+    }
+    // prevent operation button keep flicking
+    .ant-tabs-nav-operations {
+      display: none;
+    }
+  }
+}

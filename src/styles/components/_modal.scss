@@ -1,0 +1,182 @@
+.ant-modal {
+  width: 70% !important;
+  @include md {
+    width: 90% !important;
+  }
+  @include sm {
+    width: 95% !important;
+  }
+  .ant-modal-content {
+    border-radius: 35px;
+  }
+  &.no-cancel-btn {
+    .ant-modal-footer {
+      // the cancel button
+      .ant-btn-default {
+        display: none;
+      }
+    }
+  }
+  &.f2e-layout-message-modal {
+    .ant-modal-body {
+      .f2e-layout-message-modal-text {
+        text-align: center;
+        font-size: 1.25rem;
+        color: var(--dark-gray);
+        margin-top: 80px;
+        margin-bottom: 60px;
+      }
+    }
+  }
+  &.f2e-layout-loading-modal {
+    .f2e-layout-loading-modal-text {
+      text-align: center;
+      font-size: 1.25rem;
+      color: var(--dark-gray);
+      margin-bottom: 40px;
+    }
+    .f2e-layout-loading-modal-svg {
+      display: flex;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 20px;
+      .svg-fill {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        position: absolute;
+        clip-path: inset(100% 0 0 0);
+        animation: fill 2s infinite;
+        path {
+          fill: var(--primary);
+        }
+      }
+    }
+  }
+  &.f2e-layout-sinature-modal {
+    position: relative;
+    .f2e-layout-sinature-modal-text {
+      text-align: center;
+      font-size: 1.25rem;
+      color: var(--dark-gray);
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+    .f2e-layout-sinature-modal-canvas {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      position: relative;
+      .f2e-layout-sinature-modal-canvas-btn {
+        position: absolute;
+        right: 50px;
+        bottom: 10px;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        background-color: var(--white);
+        border: none;
+        cursor: pointer;
+        color: var(--dark-gray);
+        z-index: 10;
+        transition: 0.3s ease-in;
+        @include md {
+          right: 10px;
+        }
+        &:hover {
+          color: var(--primary);
+        }
+      }
+      .canvas-container {
+        border: 1px dashed var(--dark-gray);
+      }
+    }
+    .f2e-layout-sinature-modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .f2e-layout-sinature-modal-footer-left {
+        display: flex;
+        align-items: center;
+        .f2e-layout-sinature-modal-footer-clear-btn {
+          color: var(--secondary);
+          margin-right: 30px;
+          font-size: 1rem;
+          background-color: transparent;
+          border: unset;
+          cursor: pointer;
+          @include md {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+          }
+        }
+        .f2e-layout-sinature-modal-footer-color-btn {
+          position: relative;
+          width: 35px;
+          height: 35px;
+          border-radius: 50%;
+          background-color: var(--white);
+          border: unset;
+          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+          transition: 0.1s ease-in;
+          &.active {
+            // outline: 3px solid var(--secondary);
+            box-shadow: 0 0 0 3px var(--secondary);
+          }
+          @include md {
+            width: 30px;
+            height: 30px;
+          }
+          @include sm {
+            width: 22px;
+            height: 22px;
+          }
+          cursor: pointer;
+          & + .f2e-layout-sinature-modal-footer-color-btn {
+            margin-left: 25px;
+            @include md {
+              margin-left: 15px;
+            }
+          }
+          &::before {
+            content: '';
+            position: absolute;
+            width: 82.85714%;
+            height: 82.85714%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+          }
+          &.black {
+            &::before {
+              background-color: #000000;
+            }
+          }
+          &.blue {
+            &::before {
+              background-color: #0038a6;
+            }
+          }
+          &.red {
+            &::before {
+              background-color: #ff0000;
+            }
+          }
+        }
+      }
+      .f2e-layout-sinature-modal-footer-right {
+        margin-left: 20px;
+        .ant-btn {
+          & + .ant-btn {
+            margin-left: 10px;
+          }
+          @include sm {
+            padding: 10px 20px;
+          }
+        }
+      }
+    }
+  }
+}
