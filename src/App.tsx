@@ -21,7 +21,6 @@ function App() {
   function closeMenuButton(event: MouseEvent) {
     // @ts-ignore
     if (event.target.hasAttribute('data-name')) {
-      console.log('return')
       return
     }
     const target = document.getElementById('menu-button')!

@@ -84,6 +84,7 @@ export default function Sign() {
     return () => {
       canvasPdf.current.dispose()
       window.removeEventListener('resize', resizeCanvas1)
+      window.removeEventListener('resize', resizeCanvas2)
     }
   }, [])
 
