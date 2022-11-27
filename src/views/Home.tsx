@@ -1,10 +1,14 @@
 import diamond1 from '@/assets/images/diamond-1.png'
 import diamond2 from '@/assets/images/diamond-2.png'
+import { ActionTypes } from '@/context/AppContext'
 import { Logo } from '@/svgs'
+import { useAppContext } from '@/utils/useAppContext'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 export default function Home() {
+  const { dispatch } = useAppContext()
+
   useEffect(() => {
     convertStyle()
     window.addEventListener('resize', convertStyle)
@@ -29,7 +33,13 @@ export default function Home() {
             </h1>
             <p className='f2e-layout-home-info-slogan'>線上簽署，方便快速。</p>
           </div>
-          <Link className='f2e-layout-home-info-link' to='/new-signature'>
+          <Link
+            className='f2e-layout-home-info-link'
+            to='/new-signature'
+            onClick={() =>
+              dispatch({ type: ActionTypes.UpdateSignatureMode, payload: '簽署新文件' })
+            }
+          >
             簽署新文件
           </Link>
         </div>

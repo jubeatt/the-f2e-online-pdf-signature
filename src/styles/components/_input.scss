@@ -1,0 +1,46 @@
+.ant-select {
+  width: 100%;
+  border-radius: 30px;
+  margin-bottom: 30px;
+}
+.ant-input-affix-wrapper {
+  &.ant-select-selection-search-input {
+    border-radius: 30px;
+    padding-left: 15px;
+    padding-right: 15px;
+    &:hover {
+      border-color: var(--secondary);
+    }
+    .ant-input-suffix {
+      svg {
+        width: 20px;
+      }
+      .ant-input-clear-icon {
+        position: relative;
+        top: 2px;
+        svg {
+          path {
+            transition: 0.3s;
+          }
+        }
+        &:hover {
+          svg {
+            path {
+              color: var(--primary);
+            }
+          }
+        }
+      }
+    }
+  }
+  &.ant-input-affix-wrapper-focused {
+    border-color: var(--secondary);
+  }
+}
+.f2e-search-popup {
+  .ant-select-item-option {
+    .ant-select-item-option-content {
+      letter-spacing: 0;
+    }
+  }
+}

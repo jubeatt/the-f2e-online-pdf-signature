@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom'
 import MenuButton from './MenuButton'
 
 export default function Header() {
-  const { dispatch } = useAppContext()
+  const { state, dispatch } = useAppContext()
 
   return (
     <Layout.Header className='f2e-layout-header'>
@@ -17,13 +17,16 @@ export default function Header() {
             onClick={() => {
               dispatch({ type: ActionTypes.UpdatePdfData, payload: null })
               dispatch({ type: ActionTypes.UpdatePdfName, payload: null })
+              dispatch({ type: ActionTypes.UpdateSignatureMode, payload: null })
               dispatch({ type: ActionTypes.UpdateProgress, payload: 0 })
             }}
           >
             <Logo2 />
           </NavLink>
           {/* need condition here */}
-          {/* <p className='f2e-layout-header-title'>簽署新文件</p> */}
+          {state.signatureMode === '簽署新文件' ? (
+            <p className='f2e-layout-header-title'>簽署新文件</p>
+          ) : null}
         </div>
         <div className='f2e-layout-header-right'>
           <Menu mode='horizontal' overflowedIndicator={<MenuButton />} triggerSubMenuAction='click'>

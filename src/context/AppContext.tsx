@@ -2,7 +2,7 @@ import { createContext, useReducer } from 'react'
 // Types
 type InitialStateType = {
   progress: number
-  signatureMode: string
+  signatureMode: string | null
   pdfData: string | null
   pdfName: string | null
 }
@@ -40,7 +40,7 @@ const AppReducer = (state: InitialStateType, action: AppAction): InitialStateTyp
 // Context
 const initialState: InitialStateType = {
   progress: 0,
-  signatureMode: '',
+  signatureMode: null,
   pdfData: null,
   pdfName: null
 }

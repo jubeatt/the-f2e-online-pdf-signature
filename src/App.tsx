@@ -1,16 +1,12 @@
 import { Layout } from 'antd'
 import { useEffect } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
-import { useAppContext } from './utils/useAppContext'
 import Home from './views/Home'
 import Login from './views/Login'
 import NewSignature from './views/NewSignature'
-import Sign from './views/NewSignature/Sign'
 
 function App() {
-  const { state } = useAppContext()
-
   useEffect(() => {
     window.addEventListener('click', closeMenuButton)
     return () => {
@@ -39,10 +35,6 @@ function App() {
             <Route path='' element={<Home />} />
             <Route path='login' element={<Login />} />
             <Route path='new-signature' element={<NewSignature />} />
-            <Route
-              path='new-signature/sign'
-              element={state.pdfData ? <Sign /> : <Navigate to='/' replace={true} />}
-            />
             <Route path='*' element={<Home />} />
           </Routes>
         </Layout.Content>

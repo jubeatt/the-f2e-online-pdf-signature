@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer'
-import { Arrow, Pdf, Pen, Picture, Remove, Trash } from '@/svgs'
+import { Arrow, Pdf, Pen, Pen2, Picture, Remove, Trash } from '@/svgs'
 import { useAppContext } from '@/utils/useAppContext'
-import { Button, Tooltip, message } from 'antd'
+import { Button, Tooltip, message, Input } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import { fabric } from 'fabric'
 import { getDocument } from 'pdfjs-dist'
@@ -39,6 +39,11 @@ export default function Sign() {
     modal: false,
     selectedId: null as null | string
   })
+  const [editOption, setEditOption] = useState({
+    switcher: false,
+    value: state.pdfName ?? '',
+    modal: false
+  })
 
   const [penColor, setPenColor] = useState<Colors>(Colors.black)
   const canvasPdf = useRef<any>(null)
@@ -74,9 +79,13 @@ export default function Sign() {
       .catch((error) => {
         console.log('error', error.message)
         notification.error({
-          message: '錯誤提示',
-          description: '糟糕！讀取 PDF 時發生了一些錯誤，請聯繫工程師處理 :('
+          message: '糟糕！發生了一點錯誤 :(',
+          description: '讀取 PDF 時發生了一些錯誤，請聯繫工程師處理。'
         })
+        dispatch({ type: ActionTypes.UpdateProgress, payload: 0 })
+        dispatch({ type: ActionTypes.UpdatePdfData, payload: null })
+        dispatch({ type: ActionTypes.UpdatePdfName, payload: null })
+        dispatch({ type: ActionTypes.UpdateSignatureMode, payload: null })
         navigate('/')
       })
 
@@ -95,11 +104,6 @@ export default function Sign() {
     }
   }, [penColor])
 
-  // update localStorage
-  useEffect(() => {
-    localStorage.setItem('signatures', JSON.stringify(signatureList))
-  }, [signatureList])
-
   // make fabric object into "selectable / unSelectable"
   useEffect(() => {
     if (isFinalPage) {
@@ -108,6 +112,16 @@ export default function Sign() {
       fabric.Object.prototype.selectable = true
     }
   }, [isFinalPage])
+
+  // get focus when edit document's name
+  useEffect(() => {
+    if (editOption.switcher) {
+      const target = document.getElementById('edit-option')
+      const target2 = document.getElementById('edit-option-mobile')
+      target?.focus()
+      target2?.focus()
+    }
+  }, [editOption.switcher])
 
   useEffect(() => {
     convertStyle()
@@ -119,8 +133,11 @@ export default function Sign() {
 
   function convertStyle() {
     const target = document.querySelector('.f2e-layout-sign-canvas') as HTMLElement
-    const height = window.innerWidth <= 768 ? window.innerHeight - 331 : window.innerHeight - 223
-    target.style.setProperty('height', `${height}px`)
+    if (target) {
+      // const height = window.innerWidth <= 768 ? window.innerHeight - 331 : window.innerHeight - 223
+      const height = window.innerWidth <= 768 ? window.innerHeight - 375 : window.innerHeight - 223
+      target.style.setProperty('height', `${height}px`)
+    }
   }
 
   function resizeCanvas1() {
@@ -191,17 +208,24 @@ export default function Sign() {
   }
 
   function onSignatureFinish() {
-    const imgSrc = canvasSign.current.toDataURL({ format: 'png' })
-    setSignatureList((lastList) => {
-      const newList = cloneDeep(lastList)
+    try {
+      const imgSrc = canvasSign.current.toDataURL({ format: 'png' })
+      const newList = cloneDeep(signatureList)
       newList.push({
         id: uniqid(),
         src: imgSrc
       })
-      return newList
-    })
-    message.success('簽名建立成功！請拖曳或點擊使用。', 3)
-    onModalClose()
+      localStorage.setItem('signatures', JSON.stringify(newList))
+      setSignatureList(newList)
+      message.success('簽名建立成功！請拖曳或點擊使用。', 3)
+      onModalClose()
+    } catch (error: any) {
+      console.log('error', error.message)
+      notification.error({
+        message: '糟糕！發生了一點錯誤 :(',
+        description: '已超出可儲存空間，請先清除目前現有的簽名或文件。'
+      })
+    }
   }
 
   function dropPrevent(event: any) {
@@ -281,19 +305,104 @@ export default function Sign() {
     const width = pdf.internal.pageSize.width
     const height = pdf.internal.pageSize.height
     pdf.addImage(image, 'png', 0, 0, width, height)
-    pdf.save('download.pdf')
+    pdf.save(state.pdfName ?? 'dowload.pdf')
   }
 
   return (
     <>
       <div className='f2e-layout-sign'>
+        <div
+          className='f2e-layout-sign-mobile-header'
+          onClick={() => {
+            setEditOption((lastOption) => ({
+              ...lastOption,
+              switcher: true,
+              value: state.pdfName ?? ''
+            }))
+          }}
+        >
+          {editOption.switcher ? (
+            <Input
+              id='edit-option'
+              value={editOption.value}
+              onChange={(event) =>
+                setEditOption((lastOption) => ({
+                  ...lastOption,
+                  value: event.target.value
+                }))
+              }
+              onBlur={() => {
+                setEditOption((lastOption) => ({
+                  ...lastOption,
+                  switcher: false,
+                  modal: editOption.value.trim() !== state.pdfName
+                }))
+              }}
+              onPressEnter={() => {
+                setEditOption((lastOption) => ({
+                  ...lastOption,
+                  switcher: false,
+                  modal: editOption.value.trim() !== state.pdfName
+                }))
+              }}
+            />
+          ) : (
+            <>
+              {state.pdfName}
+              <Pen2 />
+            </>
+          )}
+        </div>
         <div className={cx('f2e-layout-sign-container', { showcase: isFinalPage })}>
           {/* Side Panel */}
           <div className='f2e-layout-sign-side-panel-wrapper'>
             <div className='f2e-layout-sign-side-panel'>
               <div className='f2e-layout-sign-side-panel-header'>
                 <h2 className='f2e-layout-sign-side-panel-header-title'>文件名稱</h2>
-                <p className='f2e-layout-sign-side-panel-header-document-name'>{state.pdfName}</p>
+                <p
+                  className={cx('f2e-layout-sign-side-panel-header-document-name', {
+                    active: editOption.switcher
+                  })}
+                  onClick={() => {
+                    setEditOption((lastOption) => ({
+                      ...lastOption,
+                      switcher: true,
+                      value: state.pdfName ?? ''
+                    }))
+                  }}
+                >
+                  {editOption.switcher ? (
+                    <Input
+                      id='edit-option-mobile'
+                      value={editOption.value}
+                      onChange={(event) =>
+                        setEditOption((lastOption) => ({
+                          ...lastOption,
+                          value: event.target.value
+                        }))
+                      }
+                      onBlur={() => {
+                        setEditOption((lastOption) => ({
+                          ...lastOption,
+                          switcher: false,
+                          modal: editOption.value.trim() !== state.pdfName
+                        }))
+                      }}
+                      onPressEnter={() => {
+                        setEditOption((lastOption) => ({
+                          ...lastOption,
+                          switcher: false,
+                          modal: editOption.value.trim() !== state.pdfName
+                        }))
+                      }}
+                    />
+                  ) : (
+                    <>
+                      {state.pdfName}
+                      <Pen2 />
+                    </>
+                  )}
+                </p>
               </div>
               <div className='f2e-layout-sign-side-panel-body'>
                 <h2 className='f2e-layout-sign-side-panel-body-title'>我的簽名(拖曳或點擊使用)</h2>
@@ -360,7 +469,7 @@ export default function Sign() {
             </div>
           </div>
         </div>
-        {/* mobile panel */}
+        {/* side panel (mobile) */}
         {!isFinalPage ? (
           <div className={cx('f2e-layout-sign-mobile-panel', { active: isOperationPanel })}>
             <div className='f2e-layout-sign-mobile-panel-header'>
@@ -525,6 +634,7 @@ export default function Sign() {
           dispatch({ type: ActionTypes.UpdateProgress, payload: 0 })
           dispatch({ type: ActionTypes.UpdatePdfData, payload: null })
           dispatch({ type: ActionTypes.UpdatePdfName, payload: null })
+          dispatch({ type: ActionTypes.UpdateSignatureMode, payload: null })
           setIsCancelModal(false)
           navigate('/', { replace: true })
         }}
@@ -543,6 +653,7 @@ export default function Sign() {
           dispatch({ type: ActionTypes.UpdateProgress, payload: 0 })
           dispatch({ type: ActionTypes.UpdatePdfData, payload: null })
           dispatch({ type: ActionTypes.UpdatePdfName, payload: null })
+          dispatch({ type: ActionTypes.UpdateSignatureMode, payload: null })
           setIsCancelModal(false)
           navigate('/', { replace: true })
         }}
@@ -563,10 +674,38 @@ export default function Sign() {
           const newList = signatureList.filter((it) => it.id !== deleteOption.selectedId)
           setSignatureList(newList)
           setDeleteOption({ ...deleteOption, modal: false })
+          localStorage.setItem('signatures', JSON.stringify(newList))
+          message.success('已成功刪除簽名。', 3)
         }}
         onCancel={() => setDeleteOption({ ...deleteOption, modal: false })}
       >
         <p className='f2e-layout-message-modal-text'>是否確定要刪除該簽名?</p>
+      </Modal>
+      <Modal
+        className='f2e-layout-message-modal'
+        open={editOption.modal}
+        closable={false}
+        centered={true}
+        okText='確定修改'
+        cancelText='取消'
+        onOk={() => {
+          dispatch({ type: ActionTypes.UpdatePdfName, payload: editOption.value })
+          setEditOption((lastOption) => ({
+            ...lastOption,
+            switcher: false,
+            modal: false
+          }))
+          message.success('文件名稱修改成功！', 3)
+        }}
+        onCancel={() =>
+          setEditOption((lastOption) => ({
+            ...lastOption,
+            switcher: false,
+            modal: false
+          }))
+        }
+      >
+        <p className='f2e-layout-message-modal-text'>是否確定要將文件修改為新的名稱？</p>
       </Modal>
     </>
   )
