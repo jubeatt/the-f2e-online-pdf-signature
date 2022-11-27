@@ -38,6 +38,7 @@
 - lodash（整理資料 tool）
 - pdfjs-dist（讀取 pdf 檔案）
 - uniqid（產生 id）
+- dayjs（日期處理）
 
 ## 資料夾結構
 
