@@ -31,7 +31,7 @@
 
 ## 使用工具
 
-- ant desig
+- ant design
 - classnames（管理動態 class 名稱）
 - fabric（增強 canvas 使用體驗）
 - jspdf（輸出 pdf）
